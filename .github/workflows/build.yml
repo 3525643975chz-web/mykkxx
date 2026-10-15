@@ -1,0 +1,21 @@
+name: Build SO
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nttld/setup-ndk@v1
+        with: { ndk-version: r26b }
+      - run: |
+          mkdir -p zygisk/arm64-v8a zygisk/armeabi-v7a
+          for abi in arm64-v8a armeabi-v7a; do
+            $ANDROID_NDK_HOME/build/cmake/linux-x86_64/bin/cmake \
+              -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+              -DANDROID_ABI=$abi -DANDROID_PLATFORM=android-27 .
+            $ANDROID_NDK_HOME/build/cmake/linux-x86_64/bin/cmake --build .
+            cp libmeovra.so zygisk/$abi/
+            rm -rf CMakeFiles CMakeCache.txt cmake_install.cmake Makefile
+          done
+      - uses: actions/upload-artifact@v4
+        with: { name: meovra_so, path: zygisk }
