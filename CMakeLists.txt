@@ -9,5 +9,5 @@ target_link_libraries(zygisk PRIVATE
     log
 )
 
-# 关键：告诉链接器允许未定义的符号（这些符号在系统运行时会自动找到）
+# 这行是为了让 NDK 链接器别那么死板，允许在运行时从系统找 JNI 函数
 target_link_options(zygisk PRIVATE "-Wl,--allow-shlib-undefined")
