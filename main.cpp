@@ -1,3 +1,4 @@
+extern "C" jint JNI_GetCreatedJavaVMs(JavaVM **vmBuf, jsize bufLen, jsize *nVMs);
 #include "zygisk.hpp"
 #include <string>
 #include <vector>
