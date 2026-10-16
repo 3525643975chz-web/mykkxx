@@ -19,13 +19,7 @@ jobs:
     - name: Build directly with Clang
       run: |
         mkdir -p build
-        $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++ \
-        -shared -o build/libzygisk.so \
-        -fPIC -std=c++17 -O2 -Wl,-s \
-        -I . \
-        main.cpp \
-        -Wl,--allow-shlib-undefined -Wl,--unresolved-symbols=ignore-all \
-        -llog
+        $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++ -shared -o build/libzygisk.so -fPIC -std=c++17 -O0 -I . main.cpp -Wl,--allow-shlib-undefined -Wl,--unresolved-symbols=ignore-all -llog
 
     - name: Upload SO artifact
       uses: actions/upload-artifact@v4
