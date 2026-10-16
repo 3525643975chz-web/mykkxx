@@ -1,12 +1,10 @@
 #include "zygisk.hpp"
-#include <cstdio>
-
-#define LOGI(...) fprintf(stderr, "[WeaiText] " __VA_ARGS__); fprintf(stderr, "\n")
+#include <stdio.h>
 
 class WeaiMod : public zygisk::Module {
 public:
     void onLoad(zygisk::Api* api) override { 
-        LOGI("极简版：模块加载成功！"); 
+        fprintf(stderr, "[WeaiText] 纯血版：模块加载成功！\n"); 
     }
     void preAppSpecialize(const char* niceName) override {}
     void postAppSpecialize(const char* niceName) override {}
