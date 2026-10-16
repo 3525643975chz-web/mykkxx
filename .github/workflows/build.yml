@@ -1,0 +1,35 @@
+name: Build Zygisk Module
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r27
+
+    - name: Build with CMake
+      run: |
+        mkdir build && cd build
+        cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-24 ..
+        make -j$(nproc)
+
+    - name: Upload SO artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: libzygisk
+        path: build/libzygisk.so
