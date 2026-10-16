@@ -3,9 +3,6 @@ project(zygisk)
 
 add_library(zygisk SHARED main.cpp)
 
-target_link_libraries(zygisk PRIVATE
-    -static-libstdc++
-    -static-libgcc
-    log
-    -Wl,--unresolved-symbols=ignore-all
-)
+target_link_options(zygisk PRIVATE "-Wl,--allow-shlib-undefined")
+
+target_link_libraries(zygisk PRIVATE log)
