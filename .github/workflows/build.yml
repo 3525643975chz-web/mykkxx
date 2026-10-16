@@ -1,34 +1,11 @@
-name: Build Zygisk Module
-
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup Android NDK
-      uses: nttld/setup-ndk@v1
-      with:
-        ndk-version: r26b
-
-    - name: Build directly with Clang (No CMake)
-      run: |
-        mkdir -p build
-        $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++ \
-        -shared -o build/libzygisk.so \
-        -fPIC -std=c++17 -O2 \
-        -I . \
-        main.cpp \
-        -Wl,--allow-shlib-undefined -Wl,--unresolved-symbols=ignore-all \
-        -llog
-
-    - name: Upload SO artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: libzygisk
-        path: build/libzygisk.so
+- name: Build directly with Clang (No CMake)
+  run: |
+    mkdir -p build
+    $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++ \
+    -shared -o build/libzygisk.so \
+    -fPIC -std=c++17 -O2 \
+    -static-libstdc++ \
+    -I . \
+    main.cpp \
+    -Wl,--allow-shlib-undefined -Wl,--unresolved-symbols=ignore-all \
+    -llog
